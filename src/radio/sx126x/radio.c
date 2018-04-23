@@ -1063,6 +1063,7 @@ void RadioOnRxTimeoutIrq( void )
 void RadioOnDioIrq( void )
 {
     IrqFired = true;
+    RadioIrqProcess();
 }
 
 void RadioIrqProcess( void )
