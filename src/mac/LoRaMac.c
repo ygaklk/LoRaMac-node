@@ -1492,6 +1492,7 @@ static void OnRxWindow2TimerEvent( void )
     }
     else
     {
+        Radio.Standby( );
         // Setup continuous listening for class c
         RxWindow2Config.RxContinuous = true;
     }
