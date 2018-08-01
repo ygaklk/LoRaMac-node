@@ -507,7 +507,10 @@ static LoRaMacCryptoStatus_t ComputeCmacB0( uint8_t* msg, uint16_t len, KeyIdent
         return LORAMAC_CRYPTO_ERROR_BUF_SIZE;
     }
 
-    uint8_t micBuff[CRYPTO_BUFFER_SIZE];
+    uint8_t* micBuff = malloc(CRYPTO_BUFFER_SIZE);
+    if( micBuff == NULL )
+        return LORAMAC_CRYPTO_ERROR;
+
     memset1( micBuff, 0, CRYPTO_BUFFER_SIZE );
 
     // Initialize the first Block
@@ -518,9 +521,11 @@ static LoRaMacCryptoStatus_t ComputeCmacB0( uint8_t* msg, uint16_t len, KeyIdent
 
     if( SecureElementComputeAesCmac( micBuff, ( len + MIC_BLOCK_BX_SIZE ), keyID, cmac ) != SECURE_ELEMENT_SUCCESS )
     {
+        free(micBuff);
         return LORAMAC_CRYPTO_ERROR_SECURE_ELEMENT_FUNC;
     }
 
+    free(micBuff);
     return LORAMAC_CRYPTO_SUCCESS;
 }
 
@@ -548,7 +553,10 @@ static LoRaMacCryptoStatus_t VerifyCmacB0( uint8_t* msg, uint16_t len, KeyIdenti
         return LORAMAC_CRYPTO_ERROR_BUF_SIZE;
     }
 
-    uint8_t micBuff[CRYPTO_BUFFER_SIZE];
+    uint8_t* micBuff = malloc(CRYPTO_BUFFER_SIZE);
+    if( micBuff == NULL )
+        return LORAMAC_CRYPTO_ERROR;
+
     memset1( micBuff, 0, CRYPTO_BUFFER_SIZE );
 
     // Initialize the first Block
@@ -559,6 +567,8 @@ static LoRaMacCryptoStatus_t VerifyCmacB0( uint8_t* msg, uint16_t len, KeyIdenti
 
     SecureElementStatus_t retval = SECURE_ELEMENT_ERROR;
     retval = SecureElementVerifyAesCmac( micBuff, ( len + MIC_BLOCK_BX_SIZE ), expectedCmac, keyID );
+
+    free(micBuff);
 
     if( retval == SECURE_ELEMENT_SUCCESS )
     {
@@ -655,7 +665,10 @@ static LoRaMacCryptoStatus_t ComputeCmacB1( uint8_t* msg, uint16_t len, KeyIdent
         return LORAMAC_CRYPTO_ERROR_BUF_SIZE;
     }
 
-    uint8_t micBuff[CRYPTO_BUFFER_SIZE];
+    uint8_t* micBuff = malloc(CRYPTO_BUFFER_SIZE);
+    if( micBuff == NULL )
+        return LORAMAC_CRYPTO_ERROR;
+
     memset1( micBuff, 0, CRYPTO_BUFFER_SIZE );
 
     // Initialize the first Block
@@ -666,9 +679,11 @@ static LoRaMacCryptoStatus_t ComputeCmacB1( uint8_t* msg, uint16_t len, KeyIdent
 
     if( SecureElementComputeAesCmac( micBuff, ( len + MIC_BLOCK_BX_SIZE ), keyID, cmac ) != SECURE_ELEMENT_SUCCESS )
     {
+        free(micBuff);
         return LORAMAC_CRYPTO_ERROR_SECURE_ELEMENT_FUNC;
     }
 
+    free(micBuff);
     return LORAMAC_CRYPTO_SUCCESS;
 }
 
