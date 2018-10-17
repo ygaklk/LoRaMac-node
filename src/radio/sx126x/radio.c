@@ -862,6 +862,7 @@ uint32_t RadioTimeOnAir( RadioModems_t modem, uint8_t pktLen )
 
 void RadioSend( uint8_t *buffer, uint8_t size )
 {
+    SX126xSetXTrim( );
     SX126xSetDioIrqParams( IRQ_TX_DONE | IRQ_RX_TX_TIMEOUT,
                            IRQ_TX_DONE | IRQ_RX_TX_TIMEOUT,
                            IRQ_RADIO_NONE,
@@ -899,6 +900,7 @@ void RadioStandby( void )
 
 void RadioRx( uint32_t timeout )
 {
+    SX126xSetXTrim( );
     SX126xSetDioIrqParams( IRQ_RADIO_ALL, //IRQ_RX_DONE | IRQ_RX_TX_TIMEOUT,
                            IRQ_RADIO_ALL, //IRQ_RX_DONE | IRQ_RX_TX_TIMEOUT,
                            IRQ_RADIO_NONE,
@@ -962,6 +964,7 @@ void RadioSetTxContinuousWave( uint32_t freq, int8_t power, uint16_t time )
 {
     SX126xSetRfFrequency( freq );
     SX126xSetRfTxPower( power );
+    SX126xSetXTrim( );
     SX126xSetTxContinuousWave( );
 
     TimerSetValue( &RxTimeoutTimer, time  * 1e3 );
