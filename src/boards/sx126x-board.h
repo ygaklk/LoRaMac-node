@@ -139,6 +139,11 @@ bool SX126xCheckRfFrequency( uint32_t frequency );
 uint32_t SX126xGetBoardTcxoWakeupTime( void );
 
 /*!
+ * \brief Initializes the XTA Trim value for SX126X
+ */
+void SX126xSetXTrim( void );
+
+/*!
  * Radio hardware and global parameters
  */
 extern SX126x_t SX126x;

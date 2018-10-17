@@ -59,6 +59,15 @@ uint32_t SX126xGetBoardTcxoWakeupTime( void )
     return BOARD_TCXO_WAKEUP_TIME;
 }
 
+void SX126xSetXTrim( void )
+{
+    //TODO: make dynamic these values
+    uint8_t CLoad[2] = { 0x12, 0x12};
+    SX126xSetStandby( STDBY_XOSC );
+    SX126xWriteRegisters(REG_XTA_TRIM, CLoad, 2);
+}
+
+
 void SX126xReset( void )
 {
     DelayMs( 10 );
