@@ -29,6 +29,9 @@
 #include "sx126x-board.h"
 #include "board.h"
 
+//TODO: remove the following include
+#include "syscfg/syscfg.h"
+
 /*!
  * \brief Initializes the radio
  *
@@ -670,8 +673,13 @@ void RadioSetRxConfig( RadioModems_t modem, uint32_t bandwidth,
             break;
 
         case MODEM_LORA:
+#if SX126X_RADIO_RX_DURATION != 0
+            SX126xSetStopRxTimerOnPreambleDetect( true );
+            SX126xSetLoRaSymbNumTimeout( 0 );
+#else
             SX126xSetStopRxTimerOnPreambleDetect( false );
             SX126xSetLoRaSymbNumTimeout( symbTimeout );
+#endif
             SX126x.ModulationParams.PacketType = PACKET_TYPE_LORA;
             SX126x.ModulationParams.Params.LoRa.SpreadingFactor = ( RadioLoRaSpreadingFactors_t )datarate;
             SX126x.ModulationParams.Params.LoRa.Bandwidth = Bandwidths[bandwidth];
@@ -716,8 +724,12 @@ void RadioSetRxConfig( RadioModems_t modem, uint32_t bandwidth,
             SX126xSetModulationParams( &SX126x.ModulationParams );
             SX126xSetPacketParams( &SX126x.PacketParams );
 
+#if SX126X_RADIO_RX_DURATION != 0
+            RxTimeout = SX126X_RADIO_RX_DURATION; //ms
+#else
             // Timeout Max, Timeout handled directly in SetRx function
-            RxTimeout = 0xFFFF;
+            RxTimeout = 0xFFFFFF;
+#endif
 
             break;
     }
@@ -918,7 +930,7 @@ void RadioRx( uint32_t timeout )
     }
     else
     {
-        SX126xSetRx( RxTimeout << 6 );
+        SX126xSetRx( RxTimeout << 6 ); // ( 1<<6 ) == ( 1 / 15.625e10³ ) == ( x64 )
     }
 }
 
